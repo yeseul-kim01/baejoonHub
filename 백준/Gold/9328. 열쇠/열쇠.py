@@ -1,46 +1,42 @@
-from collections import deque 
-T = int(input())
-results = [] 
+import sys
+input = sys.stdin.readline
+from collections import *
+sys.setrecursionlimit(10**7)
 
-for _ in range(T):    
-    h, w = map(int, input().split())  
-       
-    graph = []    
-    graph.append(["." for _ in range(w+2)])    
-    for _ in range(h):        
-        graph.append(list("."+input()+"."))    
-    graph.append(["." for _ in range(w+2)])     
-    keys = [0 for _ in range(26)]   
-    for k in list(input()):        
-        if k != "0":            
-            keys[ord(k) - 97] = 1                
-    dr = [1, 0, -1, 0]    
-    dc = [0, 1, 0, -1]     
-    deq = deque([(0,0)])     
-    papers = 0    
-    tempDoors = [[] for _ in range(26)] 
-        
-    while deq:        
-        r, c = deq.popleft()             
-        for i in range(4):            
-            nr = r + dr[i]            
-            nc = c + dc[i]                        
-            if 0 <= nr < h+2 and 0 <= nc < w+2 and graph[nr][nc] != "*":     
+T = int(input())
+
+def find(x, y) :
+    global cnt
+    visited[x][y] = 1
+
+    for a, b in Dir :
+        nx = x + a
+        ny = y + b
+        if 0<=nx<=h+1 and 0<=ny<=w+1 and visited[nx][ny] == 0 and I[nx][ny] != '*' :
+            text = I[nx][ny]
+            if text == '.' : find(nx, ny)
+            elif text == '$' : cnt += 1 ; find(nx, ny)
+            elif 97<=ord(text)<=122 : 
+                Key.add(text) ; find(nx, ny)
+                while Door[text] :
+                    a, b = Door[text].pop()
+                    find(a, b)
+            else : 
+                if text.lower() in Key : find(nx, ny)
+                else : Door[text.lower()].append((nx, ny))
                 
-                num = ord(graph[nr][nc])      
-                if 65 <= num <= 90:          
-                    if keys[num - 65] == 0:                        
-                        tempDoors[num - 65].append((nr, nc))                        
-                        continue                
-                elif 97 <= num <= 122:   
-                    if keys[num - 97] == 0:                        
-                        for door in tempDoors[num - 97]:                            
-                            deq.appendleft(door)                    
-                    keys[num - 97] = 1                
-                elif graph[nr][nc] == "$":        
-                    papers += 1                                
-                graph[nr][nc] = "*"                                
-                deq.append((nr, nc))                
-    results.append(papers)    
-for r in results:    
-    print(r)
+for _ in range(T) :
+    h, w = map(int,input().split())
+    I = ['.' * (w+2)]
+    for _ in range(h) : I.append('.' + input().strip() + '.')
+    I. append('.' * (w+2))
+    Dir = [(1, 0), (0, 1), (-1, 0), (0, -1)]
+    visited=[[0] * (w+2) for _ in range(h+2)]
+    t = input().strip()
+    Key = set() ; Door = defaultdict(list)
+    if t != '0' : 
+        for a in t : Key.add(a)
+    
+    cnt = 0
+    find(0, 0)
+    print(cnt)
