@@ -1,4 +1,5 @@
 import java.io.*;
+import java.util.StringTokenizer;
 
 public class Main{
     public static int width;
@@ -6,6 +7,8 @@ public class Main{
     public static int storeCount;
     public static int guardPosition;
     public static int pullLength;
+    public static int storeD;
+    public static int storeP;
 
     public static int minDistance(int sL) {
         // 상점의 거리와 경비원의 거리를 뺀 값의 절대값이 전체 둘레의 반보다 작으면 그 값이 최단거리, 크다면 전체 둘레에서 그 값을 뺀게 최단거리
@@ -42,25 +45,27 @@ public class Main{
     public static void main(String[] args) throws IOException {
 
         BufferedReader br = new BufferedReader( new InputStreamReader (System.in));
-        String[] length = new String[2];
-        length = br.readLine().split(" ");
-        width = Integer.parseInt(length[0]);
-        height = Integer.parseInt(length[1]);
+        // String 으로 입력받아서 split 으로 나누는건 정규식이라 느리다.
+        // 그래서 StringTokenizer 를 이용해서 입력받는게 더 빠르다.
+
+
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        width = Integer.parseInt(st.nextToken());
+        height = Integer.parseInt(st.nextToken());
         pullLength = (width + height) * 2;
         storeCount = Integer.parseInt(br.readLine()); 
         int[] storeLotation = new int[storeCount];
         for ( int i = 0; i < storeCount; i++) {
-            String[] store = new String[2];
-            store = br.readLine().split(" ");
+            st = new StringTokenizer(br.readLine());
+            storeD = Integer.parseInt(st.nextToken());
+            storeP = Integer.parseInt(st.nextToken());
 
-            int direction = Integer.parseInt(store[0]);
-            int position = Integer.parseInt(store[1]);
+
             // 거리의 기준점은 맨 왼쪽 맨 위를 기준으로 펼친다고 생각 
-            storeLotation[i] = distance(direction, position);
+            storeLotation[i] = distance(storeD, storeP);
         }
-        String[] guard = new String[2];
-        guard = br.readLine().split(" ");
-        guardPosition = distance(Integer.parseInt(guard[0]), Integer.parseInt(guard[1]));
+        st = new StringTokenizer(br.readLine());
+        guardPosition = distance(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()));
         int sum = 0;
         for (int j=0; j < storeCount; j++) {
             sum += minDistance(storeLotation[j]);
