@@ -1,6 +1,6 @@
 import java.io.*;
 import java.util.*;
-
+//TODO: STREAM 으로 풀어보기 ** 꼭 확인해보기!!!!
 public class Main{
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader ( new InputStreamReader(System.in));
@@ -16,7 +16,6 @@ public class Main{
         Deque<Integer> queue = new ArrayDeque<>(); 
         queue.add(N); // 처음 시작 값 넣기 
         int cur;
-
         while(!queue.isEmpty()){
             cur = queue.poll(); // 하나씩 제거하기 
             if (cur == M){
@@ -24,25 +23,19 @@ public class Main{
                 break;
             }
             // System.out.println("현재 cur 값:"+cur);
-            int[] nexts = {cur + 1, cur - 1, cur * 2}; // TODO: 확인하기 
-            for (int i : nexts){
-                if ( i <0 || i>100000) {
-                    continue; // 벗어나면 그다음꺼로 넘어감 
-                }
-                // System.out.println("현재 확인 중인 값:"+ i);
-                if (visited[i] == -1) {
-                    visited[i] = visited[cur] +1; // 시간 업데이트 
-                    count[i] = count[cur]; // 같은 경로니 카운트 유지시키기
-                    queue.add(i);
-                }
-                else if (visited[i] == visited[cur]+1) {
-                    // 서로 같다면 카운트를 증가시키기 
-                    // 시간은 같은데 
-                    count[i] += count[cur]; // 길이 하나 더 있는 거니까... 
-                }
-                // System.out.println("확인 마침:"+ i + "count:"+count[i]);
+            int current = cur;
+            Arrays.stream(new int[]{current + 1, current - 1, current * 2})
+                .filter(i -> i >= 0 && i <= 100000)
+                .forEach(i -> {
+                    if (visited[i] == -1) {
+                        visited[i] = visited[current] + 1;
+                        count[i] = count[current];
+                        queue.add(i);
+                    } else if (visited[i] == visited[current] + 1) {
+                        count[i] += count[current];
+                    }
+                });
             }
-        }
         System.out.println(visited[M]);
         System.out.println(count[M]);
 
