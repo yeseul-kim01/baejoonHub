@@ -24,8 +24,8 @@ public class Main{
                 break;
             }
             // System.out.println("현재 cur 값:"+cur);
-            List<Integer> list = Arrays.asList(cur + 1, cur - 1, cur * 2); //TODO: 값이 있는 리스트 만들기 확인 
-            for (int i : list){
+            int[] nexts = {cur + 1, cur - 1, cur * 2}; // TODO: 확인하기 
+            for (int i : nexts){
                 if ( i <0 || i>100000) {
                     continue; // 벗어나면 그다음꺼로 넘어감 
                 }
